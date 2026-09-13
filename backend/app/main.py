@@ -54,7 +54,8 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# app.mount(settings.MEDIA_URL_PREFIX, StaticFiles(directory=settings.MEDIA_ROOT), name="media")
+# Uploaded gallery and coordinator images are served by the backend.
+app.mount(settings.MEDIA_URL_PREFIX, StaticFiles(directory=settings.MEDIA_ROOT), name="media")
 # app.mount("/assets", StaticFiles(directory="./assets"), name="assets")
 
 app.include_router(auth.router)

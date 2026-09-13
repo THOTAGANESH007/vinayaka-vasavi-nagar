@@ -39,9 +39,8 @@ export async function uploadMedia(folderId: string, files: File[]): Promise<Medi
   const formData = new FormData()
   formData.append('folder_id', folderId)
   files.forEach((file) => formData.append('files', file))
-  const { data } = await api.post<MediaItem[]>('/api/admin/media/upload', formData, {
-    headers: { 'Content-Type': 'multipart/form-data' },
-  })
+  // Let the browser set Content-Type so it includes the multipart boundary.
+  const { data } = await api.post<MediaItem[]>('/api/admin/media/upload', formData)
   return data
 }
 

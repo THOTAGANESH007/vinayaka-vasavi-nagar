@@ -1,10 +1,10 @@
 import os
-import uuid
 
 from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile, status
 from sqlalchemy.orm import Session
 
 from app.config import settings
+from app.cloudinary_storage import delete_image, upload_image
 from app.database import get_db
 from app.deps import require_admin
 from app.models import Coordinator
@@ -49,10 +49,16 @@ async def create_coordinator(
 
     image_url = None
     if image is not None and image.filename:
-        image_url = await _save_coordinator_image(image)
+        image_url, public_id = await _save_coordinator_image(image)
+    else:
+        public_id = None
 
     coordinator = Coordinator(
-        name=name.strip(), designation=designation.strip(), display_order=display_order, image_url=image_url
+        name=name.strip(),
+        designation=designation.strip(),
+        display_order=display_order,
+        image_url=image_url,
+        cloudinary_public_id=public_id,
     )
     db.add(coordinator)
     db.commit()
@@ -78,9 +84,13 @@ async def update_coordinator(
         raise HTTPException(status_code=422, detail="Name and designation are required")
 
     if image is not None and image.filename:
-        new_url = await _save_coordinator_image(image)
-        _delete_file_for_url(coordinator.image_url)
+        new_url, new_public_id = await _save_coordinator_image(image)
+        if coordinator.cloudinary_public_id:
+            delete_image(coordinator.cloudinary_public_id)
+        else:
+            _delete_file_for_url(coordinator.image_url)
         coordinator.image_url = new_url
+        coordinator.cloudinary_public_id = new_public_id
 
     coordinator.name = name.strip()
     coordinator.designation = designation.strip()
@@ -95,13 +105,16 @@ def delete_coordinator(coordinator_id: str, db: Session = Depends(get_db), _admi
     coordinator = db.query(Coordinator).filter(Coordinator.id == coordinator_id).first()
     if not coordinator:
         raise HTTPException(status_code=404, detail="Coordinator not found")
-    _delete_file_for_url(coordinator.image_url)
+    if coordinator.cloudinary_public_id:
+        delete_image(coordinator.cloudinary_public_id)
+    else:
+        _delete_file_for_url(coordinator.image_url)
     db.delete(coordinator)
     db.commit()
     return None
 
 
-async def _save_coordinator_image(image: UploadFile) -> str:
+async def _save_coordinator_image(image: UploadFile) -> tuple[str, str]:
     ext = os.path.splitext(image.filename or "")[1].lower()
     if image.content_type not in ALLOWED_IMAGE_TYPES or ext not in ALLOWED_EXTENSIONS:
         raise HTTPException(status_code=415, detail="Profile image must be jpg, png, or webp")
@@ -110,10 +123,7 @@ async def _save_coordinator_image(image: UploadFile) -> str:
     if len(contents) > MAX_UPLOAD_BYTES:
         raise HTTPException(status_code=413, detail="Profile image exceeds the 5MB upload limit")
 
-    coord_dir = os.path.join(settings.MEDIA_ROOT, "coordinators")
-    os.makedirs(coord_dir, exist_ok=True)
-    stored_name = f"{uuid.uuid4().hex}{ext}"
-    with open(os.path.join(coord_dir, stored_name), "wb") as f:
-        f.write(contents)
-
-    return f"{settings.MEDIA_URL_PREFIX}/coordinators/{stored_name}"
+    try:
+        return upload_image(contents, "vinayaka-vasavi-nagar/coordinators")
+    except Exception as error:
+        raise HTTPException(status_code=502, detail="Could not upload image to Cloudinary") from error

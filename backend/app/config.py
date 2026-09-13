@@ -16,6 +16,10 @@ class Settings(BaseSettings):
 
     CORS_ORIGINS: str = "http://localhost:5173,http://localhost:3000"
 
+    # Legacy local-media settings used only for serving older uploads.
+    MEDIA_ROOT: str = "./media"
+    MEDIA_URL_PREFIX: str = "/media"
+
     ADMIN_USERNAME: str
     ADMIN_EMAIL: str
     ADMIN_PASSWORD: str
