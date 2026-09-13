@@ -1,0 +1,9 @@
+venv
+__pycache__
+*.pyc
+*.db
+.env
+media/gallery/*
+media/coordinators/*
+!media/gallery/.gitkeep
+!media/coordinators/.gitkeep
