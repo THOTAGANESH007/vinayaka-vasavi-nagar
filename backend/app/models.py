@@ -75,6 +75,7 @@ class Media(Base):
     folder_id = Column(String, ForeignKey("media_folders.id", ondelete="CASCADE"), nullable=False)
     image_url = Column(String(500), nullable=False)
     image_name = Column(String(255), nullable=False)
+    cloudinary_public_id = Column(String(500), nullable=True)  # used for Cloudinary deletion
     created_at = Column(DateTime, default=datetime.utcnow, index=True)
 
     folder = relationship("MediaFolder", back_populates="media_items")
@@ -87,6 +88,7 @@ class Coordinator(Base):
     name = Column(String(150), nullable=False)
     designation = Column(String(150), nullable=False)
     image_url = Column(String(500), nullable=True)
+    cloudinary_public_id = Column(String(500), nullable=True)  # used for Cloudinary deletion
     display_order = Column(Integer, default=0)
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)

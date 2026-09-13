@@ -2,14 +2,13 @@
 Application configuration, loaded from environment variables (.env).
 Never hardcode secrets here - all sensitive values come from the environment.
 """
-import os
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8", extra="ignore")
 
-    DATABASE_URL: str = "sqlite:///./vinayaka_youth.db"
+    DATABASE_URL: str
 
     JWT_SECRET_KEY: str = "insecure-dev-secret-change-me"
     JWT_ALGORITHM: str = "HS256"
@@ -21,8 +20,10 @@ class Settings(BaseSettings):
     ADMIN_EMAIL: str
     ADMIN_PASSWORD: str
 
-    MEDIA_ROOT: str = "./media"
-    MEDIA_URL_PREFIX: str = "/media"
+    # Cloudinary — image storage & CDN
+    CLOUDINARY_CLOUD_NAME: str
+    CLOUDINARY_API_KEY: str
+    CLOUDINARY_API_SECRET: str
 
     @property
     def cors_origins_list(self) -> list[str]:
@@ -30,7 +31,3 @@ class Settings(BaseSettings):
 
 
 settings = Settings()
-
-os.makedirs(settings.MEDIA_ROOT, exist_ok=True)
-os.makedirs(os.path.join(settings.MEDIA_ROOT, "gallery"), exist_ok=True)
-os.makedirs(os.path.join(settings.MEDIA_ROOT, "coordinators"), exist_ok=True)
