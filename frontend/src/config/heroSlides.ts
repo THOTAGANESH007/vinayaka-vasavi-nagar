@@ -1,5 +1,3 @@
-import { API_URL } from '../services/api'
-
 // Edit these 3 slides to control the homepage carousel.
 // imageUrl: paste a direct link to an image (must end in .jpg/.png/.webp etc,
 //           or be a link that serves an image directly — not a webpage).
@@ -18,16 +16,16 @@ export const HERO_SLIDES: HeroSlideConfig[] = [
   {
     eyebrow: 'Podalakur',
     title: 'Vinayaka Youth Vasavi Nagar',
-    imageUrl: `${API_URL}/assets/first.jpeg`,
+    imageUrl: '/assets/first.jpeg',
   },
   {
     eyebrow: 'Ganesh Chaturthi 2026',
     title: 'Faith. Devotion. Unity.',
-    imageUrl: `${API_URL}/assets/second.jpeg`,
+    imageUrl: '/assets/second.jpeg',
   },
   {
     eyebrow: 'Our Community',
     title: 'Celebrating Together',
-    imageUrl: `${API_URL}/assets/ganeshaaa.webp`,
+    imageUrl: '/assets/ganeshaaa.webp',
   },
 ]
