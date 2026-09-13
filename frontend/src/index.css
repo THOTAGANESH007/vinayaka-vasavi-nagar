@@ -1,0 +1,53 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply bg-cream text-ink font-body antialiased;
+    overflow-x: hidden;
+  }
+  h1, h2, h3, h4 {
+    @apply font-display;
+  }
+  ::selection {
+    @apply bg-saffron/30;
+  }
+}
+
+@layer utilities {
+  .container-app {
+    @apply max-w-6xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+  .divider-motif {
+    @apply flex items-center justify-center gap-3 text-gold;
+  }
+  .divider-motif::before,
+  .divider-motif::after {
+    content: '';
+    height: 1px;
+    width: 2.5rem;
+    @apply bg-gold/50;
+  }
+  .card-surface {
+    @apply bg-white/70 backdrop-blur-sm border border-maroon/10 rounded-2xl shadow-[0_4px_20px_rgba(122,33,48,0.08)];
+  }
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-full bg-maroon text-cream px-6 py-3 text-sm font-semibold tracking-wide shadow-md shadow-maroon/20 transition-all active:scale-95 hover:bg-maroon-deep disabled:opacity-50 disabled:pointer-events-none;
+  }
+  .btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 rounded-full border border-maroon/30 text-maroon px-6 py-3 text-sm font-semibold tracking-wide transition-all active:scale-95 hover:bg-maroon/5 disabled:opacity-50 disabled:pointer-events-none;
+  }
+  .btn-danger {
+    @apply inline-flex items-center justify-center gap-2 rounded-full bg-red-700 text-white px-5 py-2.5 text-sm font-semibold transition-all active:scale-95 hover:bg-red-800 disabled:opacity-50;
+  }
+  .input-field {
+    @apply w-full rounded-xl border border-maroon/20 bg-white px-4 py-3 text-ink placeholder:text-ink/40 focus:outline-none focus:ring-2 focus:ring-saffron/50 focus:border-saffron transition-colors;
+  }
+  .skeleton {
+    @apply bg-gradient-to-r from-maroon/5 via-maroon/10 to-maroon/5 bg-[length:200%_100%] animate-shimmer rounded-xl;
+  }
+}
