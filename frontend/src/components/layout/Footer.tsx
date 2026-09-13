@@ -13,7 +13,7 @@ export default function Footer() {
           </p>
 
           <div className="flex items-center gap-4 mt-2">
-            <a href="#" className="p-2 rounded-full bg-cream/10 hover:bg-cream/20 transition-colors" aria-label="Instagram">
+            <a href="https://www.instagram.com/vinayaka__youth__?stkn=eGdsemYxbDVpb2Q5" className="p-2 rounded-full bg-cream/10 hover:bg-cream/20 transition-colors" aria-label="Instagram">
               <Instagram size={18} />
             </a>
             <a href="#" className="p-2 rounded-full bg-cream/10 hover:bg-cream/20 transition-colors" aria-label="Facebook">
